@@ -60,6 +60,7 @@ namespace AppBindingCommands.ViewModels
             ShowMessageCommand = new Command(ShowMessage);
             CountCommand = new Command(async () => await CountCharacters());
             CleanCommand = new Command(async () => await CleanConfirmation());
+            OptionCommand = new Command(async()  => await ShowOptions());
         }
 
         public async Task CountCharacters()
@@ -83,6 +84,20 @@ namespace AppBindingCommands.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Informação", "Limpeza realizada com sucesso","OK");
             }
         }
+
+        public async Task ShowOptions()
+        {
+            string result = await Application.Current.MainPage.DisplayActionSheet("Selecione uma opção: ", "", "Cnacelar", "Limpar", "Contar Caracteres", "Exibir Saudação");
+
+            if (result != null)
+            {
+                if (result.Equals("Limpar")) await CleanConfirmation();
+                if (result.Equals("Contar Caracteres")) await CountCharacters();
+                if (result.Equals("Exibir Saudação")) ShowMessage();
+            }
+        }
+
+        public ICommand OptionCommand { get; }
 
         public ICommand CleanCommand {  get; }
        
